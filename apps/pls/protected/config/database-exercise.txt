@@ -1,0 +1,52 @@
+CREATE DATABASE `pls`;
+USE `pls`;
+
+CREATE TABLE `contacts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `last_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_datetime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `modified_datetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `contacts` (`id`, `first_name`, `last_name`, `email`, `created_datetime`, `modified_datetime`) VALUES
+(1,	'John',	'Doe',	'jdoe@example.com',	'2023-04-21 21:32:25',	'2023-04-21 21:32:25');
+
+CREATE TABLE `states` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `state_name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `state_abbreviation` varchar(2) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_datetime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `modified_datetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `states` (`id`, `state_name`, `state_abbreviation`, `created_datetime`, `modified_datetime`) VALUES
+(1,	'Washington',	'WA',	'2023-04-21 21:33:44',	'2023-04-21 21:33:44'),
+(2,	'Oregon',	'OR',	'2023-04-21 21:34:01',	'2023-04-21 21:34:01'),
+(3,	'California',	'CA',	'2023-04-21 21:34:09',	'2023-04-21 21:34:09');
+
+CREATE TABLE `contacts_addresses` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `contacts_id` int(11) NOT NULL,
+  `states_id` int(11) NOT NULL,
+  `address_line_1` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address_line_2` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `city` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `zip` int(5) NOT NULL,
+  `lived_start_date` date NOT NULL,
+  `lived_end_date` date DEFAULT NULL,
+  `created_datetime` timestamp NOT NULL DEFAULT current_timestamp(),
+  `modified_datetime` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `contacts_id` (`contacts_id`),
+  KEY `states_id` (`states_id`),
+  CONSTRAINT `contacts_addresses_ibfk_1` FOREIGN KEY (`contacts_id`) REFERENCES `contacts` (`id`),
+  CONSTRAINT `contacts_addresses_ibfk_2` FOREIGN KEY (`states_id`) REFERENCES `states` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `contacts_addresses` (`id`, `contacts_id`, `states_id`, `address_line_1`, `address_line_2`, `city`, `zip`, `lived_start_date`, `lived_end_date`, `created_datetime`, `modified_datetime`) VALUES
+(1,	1,	1,	'555 225th Pl NE',	'Apt 101',	'Sammamish',	98074,	'2016-06-01',	'2020-11-01',	'2023-04-21 21:34:36',	'2023-04-21 21:34:36'),
+(2,	1,	2,	'777 225th Pl NE',	'Apt 202',	'Portland',	97035,	'2020-11-01',	NULL,	'2023-04-21 21:35:27',	'2023-04-21 21:35:36');
