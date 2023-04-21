@@ -13,12 +13,23 @@ $this->breadcrumbs = [
 
 <div class="row">
 	<?php
+
+	/*
+	 	[SUCCESS] replaced foreach with a limited "for" loop.
+		Questions:
+		* Should this be configured in the library itself, or is it efficient enough to take the entire update feed and truncate it here in the view?
+		* If so, should we put the actual value of "5" in a centralized config?
+	*/
+
+	$blog_updates = Yii::app()->params['blogUpdates'];
+
 	if (!empty($updates)) {
-		foreach ($updates as $item) {
+		for ($i = 0; $i < $blog_updates; $i++) {
+			if ($i >= count($updates)) break;
 			?>
 			<div class="col-md-12 update">
-				<h3><a href="<?= $item->link ?>" target="_blank"><?= $item->title ?></a></h3>
-				<p><?= $item->description ?></p>
+				<h3><a href="<?= $updates[$i]->link ?>" target="_blank"><?= $updates[$i]->title ?></a></h3>
+				<p><?= $updates[$i]->description ?></p>
 			</div>
 			<?php
 		}
